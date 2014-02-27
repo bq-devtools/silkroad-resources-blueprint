@@ -1,0 +1,228 @@
+FORMAT: 1A
+HOST: https://resources.int.bqws.io/v1.0/
+
+# Resources (v1.0)
+The Resources API is a flexible programming interface for retrieval of resource's representations. This is the generic API specification for the **resources-api**. More information can be found in [confluence](http://jira.mundoreader.com/confluence/display/SILKROAD/SilkRoad+-+Resources+API).
+
+### Content Negotiation ##
+For some resources there may be multiple representations which the client can retrieve.  Aligned with HTTP standards, a client can request the desire representation by using Accept header in its request. In cases when the client does not request a specific representation via the  Accept header, the server will always default to a representation in the application/json format. When multiple representations exits, the server sends the Alternates header to indicate available representations.
+
+
+## Collections [/resource/{type}]
+A collection is a container of resources that share the same type. For instance:
+
+* **/resource/music:Album**    => All resources of type *music:Album*
+* **/resource/book:Book**     => All resources of type *book:Book*
+* **/resource/music:Artist**   => All resources of type *music:Artist*
+
+### List elements of a collection [GET]
+
+For the *JSON* representation the response is an array of objects.
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|api:query|A search query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
+|api:pageSize|Number of result returned in the page|Integer > 0|10||
+|api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
+|api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"})|String|||
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400  |invalid_page_size|When api:pageSize parameter is invalid|
+|400  |invalid_sort|When api:sort parameter is invalid|
+|400  |invalid_page|When api:page parameter is invalid|
+|400  |invalid_query|When api:query parameter is invalid|
+
++ Request
+    + Header
+    
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        [{
+          "id": 1, "title": "Jogging in park"
+        }, {
+          "id": 2, "title": "Pick-up posters from post-office"
+        }]
+
+### Add new resource into collection [POST]
+
+Clients can use this endpoint to add a new resource. The body of the request must contain a *JSON* representation of the collection resource to be created. 
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400  |bad_request|When request is malformed|
+|409  |conflict|When request id exists in the database|
+|422  |invalid_entity|When entity is malformed|
+
++ Request
+
+    + Header
+    
+            Accept: application/json
+    + Body
+    
+            { 
+                "field1": "field1content",
+                "field2": "field2content"
+            }
+
++ Response 201 (text/plain)
+
+        {type}/123
+
+
+
+## Resources [/resource/{type}/{id}]
+
+A resource is single object in a collection. For instance
+
+* **/resource/music:Album/123**    => The representation of a single object of type *music:Album* whose identifier is *123*
+
+### Get a resource representation [GET]
+
+For the *JSON* represeantion the response is an object.
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|404  |not_found|When resource is not exist|
+
++ Request
+    + Header
+    
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+          "id": 1, "title": "Jogging in park"
+        }
+
+
+### Update a resource [PUT]
+
+Clients can use this endpoint to update a resource.
+
+###Parameters###
+The body of the request must contain a Json object including the fields to update in a particular resource.
+
+|Name|Description|Type|Required
+|----|-----------|----|:------:|
+|element|A part of collection element or full collection element|JSON|*|
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400  |bad_request|When data is malformed|
+|404  |not_found|When resource is not exist|
+|422  |invalid_entity|When entity is malformed|
+
++ Request
+    + Header
+    
+            Accept: application/json
+
+    + Body
+        
+            { 
+                "field1": "field1content",
+                "field2": "field2content"
+            }
+
+
++ Response 204 
+
+### Delete a resource [DELETE]
+
+Clients can use this endpoint to delete a resource.
+
+
++ Response 204
+
+## Relations [/resource/{type}/{id}/{rel}]
+
+### List elements of a resource's relation [GET]
+
+For the *JSON* representation the response is an array of objects.
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|api:query|A search query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
+|api:pageSize|Number of result returned in the page|Integer > 0|10||
+|api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
+|api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"})|String|||
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400  |invalid_page_size|When api:pageSize parameter is invalid|
+|400  |invalid_sort|When api:sort parameter is invalid|
+|400  |invalid_page|When api:page parameter is invalid|
+|400  |invalid_query|When api:query parameter is invalid|
+
++ Request
+    + Header
+    
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        [{
+          "id": 1, "title": "Jogging in park"
+        }, {
+          "id": 2, "title": "Pick-up posters from post-office"
+        }]
+        
+### Add new relation [PUT]
+
+Clients can use this endpoint to add a relation. The relative uri of the resource to be added to the relation must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
+
+* **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Adds *music:Track/555* to the *music:tracks* relation of the *music:Playlist/123* resource.
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|r|URI matrix param to indicate the relative URI of the resource in the relation's predicate.|URLEncoded string||*|
+
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400  |bad_request|When data is malformed|
+|409  |conflict|When request id exists in the database|
+
+
++ Request
+
+    + Header
+    
+            Accept: application/json
+
++ Response 201
+
+### Delete a relation [DELETE]
+
+Clients can use this endpoint to delete a relation. The relative uri of the resource to be added to the relation must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
+
+* **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Deletes *music:Track/555* from the *music:tracks* relation of the *music:Playlist/123* resource.
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|r|URI matrix param to indicate the relative URI of the resource in the relation's predicate.|URLEncoded string||*|
+
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400  |bad_request|When data is malformed|
+
+
++ Response 204
+
