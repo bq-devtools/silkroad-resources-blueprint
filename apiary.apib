@@ -1,228 +1,290 @@
-FORMAT: 1A
-HOST: https://resources.int.bqws.io/v1.0/
+HOST: https://iam.int.bqws.io/v1.0/
+--- IAM (v1.0) ---
 
-# Resources (v1.0)
-The Resources API is a flexible programming interface for retrieval of resource's representations. This is the generic API specification for the **resources-api**. More information can be found in [confluence](http://jira.mundoreader.com/confluence/display/SILKROAD/SilkRoad+-+Resources+API).
+---
+Identity and Authorization Management
+---
 
-### Content Negotiation ##
-For some resources there may be multiple representations which the client can retrieve.  Aligned with HTTP standards, a client can request the desire representation by using Accept header in its request. In cases when the client does not request a specific representation via the  Accept header, the server will always default to a representation in the application/json format. When multiple representations exits, the server sends the Alternates header to indicate available representations.
-
-
-## Collections [/resource/{type}]
-A collection is a container of resources that share the same type. For instance:
-
-* **/resource/music:Album**    => All resources of type *music:Album*
-* **/resource/book:Book**     => All resources of type *book:Book*
-* **/resource/music:Artist**   => All resources of type *music:Artist*
-
-### List elements of a collection [GET]
-
-For the *JSON* representation the response is an array of objects.
-
+--
+Authorization
+The following is a section of resources related to client authorization to the SilkRoad platfom
+--
+Generate an access token
 ###Parameters###
-|Name|Description|Type|Default|Required
-|----|-----------|----|:-----:|:------:|
-|api:query|A search query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
-|api:pageSize|Number of result returned in the page|Integer > 0|10||
-|api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
-|api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"})|String|||
+The body of the request must contain these form parameters
 
-###Errors###
-|Status|Error|Description|
-|------|-----|-----------|
-|400  |invalid_page_size|When api:pageSize parameter is invalid|
-|400  |invalid_sort|When api:sort parameter is invalid|
-|400  |invalid_page|When api:page parameter is invalid|
-|400  |invalid_query|When api:query parameter is invalid|
+|Name|Description|Type|Required|
+|----|-----------|----|-----------|
+|grant_type|The type of the grant request. Only the *urn:ietf:params:oauth:grant-type:jwt-bearer* grant type is supported|String|*|
+|assertion|The serialized signed JWT that asserts the grant request (see JWT claims section below) |String|*|
 
-+ Request
-    + Header
-    
-            Accept: application/json
+###JWT claims###
+|Name|Description|Type|Required|
+|----|-----------|----|-----------|
+|iss|Client ID of the client making the request|String|*|
+|aud|It must always be 'http://iam.bqws.io'|String|*|
+|scope|Space separated list of scopes requested|String|*|
+|exp|Time when the requested access token must expired. It must be less than an hour from the time of this request|Timestamp (in seconds)|*|
+|prn|Username if the request if for a user access token *without* using OAuth|String||
 
-+ Response 200 (application/json)
+If the client is requesting a user access token using OAuth authentication, the JWT must include the following claims:
 
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
+|Name|Description|Type|Required|
+|----|-----------|----|-----------|
+|oauth.service|Service that will provide the authorization, e.g. facebook|String|*|
+|oauth.code|Code used in OAuth2 for exanging for a token |String|only if OAuth2|
+|oauth.redirect_uri|URI used by the client in OAuth2 to redirect the user when he does the login |String|only if OAuth2|
+|oauth.token|Token returned by OAuth1 server to the client when the user does the login |String|only if OAuth1|
+|oauth.verifier|Verifier returned by OAuth1 server to the client when the user does the login |String|only if OAuth1|
 
-### Add new resource into collection [POST]
-
-Clients can use this endpoint to add a new resource. The body of the request must contain a *JSON* representation of the collection resource to be created. 
-
-###Errors###
-|Status|Error|Description|
-|------|-----|-----------|
-|400  |bad_request|When request is malformed|
-|409  |conflict|When request id exists in the database|
-|422  |invalid_entity|When entity is malformed|
-
-+ Request
-
-    + Header
-    
-            Accept: application/json
-    + Body
-    
-            { 
-                "field1": "field1content",
-                "field2": "field2content"
-            }
-
-+ Response 201 (text/plain)
-
-        {type}/123
-
-
-
-## Resources [/resource/{type}/{id}]
-
-A resource is single object in a collection. For instance
-
-* **/resource/music:Album/123**    => The representation of a single object of type *music:Album* whose identifier is *123*
-
-### Get a resource representation [GET]
-
-For the *JSON* represeantion the response is an object.
-
-###Errors###
-|Status|Error|Description|
-|------|-----|-----------|
-|404  |not_found|When resource is not exist|
-
-+ Request
-    + Header
-    
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-        {
-          "id": 1, "title": "Jogging in park"
-        }
-
-
-### Update a resource [PUT]
-
-Clients can use this endpoint to update a resource.
-
-###Parameters###
-The body of the request must contain a Json object including the fields to update in a particular resource.
-
-|Name|Description|Type|Required
+###Response fields###
+|Name|Description|Type|Required|
 |----|-----------|----|:------:|
-|element|A part of collection element or full collection element|JSON|*|
+|accessToken  |Token granted for accessing SilkRoad APIs|String|*|
+|expiresAt| Epoch time (in millis) when the token expires|Long|*|
 
 ###Errors###
 |Status|Error|Description|
-|------|-----|-----------|
-|400  |bad_request|When data is malformed|
-|404  |not_found|When resource is not exist|
-|422  |invalid_entity|When entity is malformed|
+|----|-----------|----|
+|400  |invalid_grant|The grant request is invalid. This occurs when *assertion* is missing, *grant_type* is missing or it is specified to an unsupported value.|
+|400  |missing_oauth_params|If the code (for oauth2) or oauth_token and/or oauth_verifier (for oauth1) parameter is missing.|
+|401  |unauthorized|The grant request has not procceeded. This occurs if the signatire of the JWT is invalid, or at leats one of the requested scopes is not allowed for the client. |
+|401  |no_such_principal| The princial identified by the prn field of the JWT does not exists on the domain of the issuer. |
+POST /oauth/token
+> Accept: application/json
+< 200
+< Content-Type: application/json
+{
+    "accessToken":"valid-token", 
+    "expiresAt": 1385377605000
+}
 
-+ Request
-    + Header
-    
-            Accept: application/json
+Generate an access token from al OAuth callback
+###Parameters###
 
-    + Body
-        
-            { 
-                "field1": "field1content",
-                "field2": "field2content"
-            }
-
-
-+ Response 204 
-
-### Delete a resource [DELETE]
-
-Clients can use this endpoint to delete a resource.
+|Name|Description|Type|Required|
+|----|-----------|----|-----------|
+|grant_type|The type of the grant request. Only the *urn:ietf:params:oauth:grant-type:jwt-bearer* grant type is supported|String|*|
+|assertion|The serialized signed JWT that asserts the grant request* |String|*|
+|code|Code used in oAuth2 for exanging for a token |String|only if OAuth2|
+|oauth_token|Token returned by OAuth1 server to the client when the user does the login |String|only if OAuth1|
+|oauth_verifier|Verifier returned by OAuth1 server to the client when the user does the login |String|only if OAuth1|
 
 
-+ Response 204
 
-## Relations [/resource/{type}/{id}/{rel}]
+###JWT claims###
+|Name|Description|Type|Required|
+|----|-----------|----|-----------|
+|iss|Client ID of the client making the request|String|*|
+|aud|It must always be 'http://iam.bqws.io'|String|*|
+|scope|Space separated list of scopes requested|String|*|
+|exp|Time when the requested access token must expired. It must be less than an hour from the time of this request|Timestamp (in seconds)|*|
+|oauth.service|Service that will provide the authorization, e.g. facebook|String|*|
 
-### List elements of a resource's relation [GET]
+###Response fields###
+|Name|Description|Type|Required|
+|----|-----------|----|:------:|
+|accessToken  |Token granted for accessing SilkRoad APIs|String|*|
+|expiresAt| Epoch time (in millis) when the token expires|Long|*|
 
-For the *JSON* representation the response is an array of objects.
+###Errors###
+|Status|Error|Description|
+|----|-----------|----|
+|400  |invalid_grant|The grant request is invalid. This occurs when *assertion* is missing, *grant_type* is missing or it is specified to an unsupported value.|
+|400  |missing_oauth_params|If the code (for oauth2) or oauth_token and/or oauth_verifier (for oauth1) parameter is missing.|
+|401  |unauthorized|The grant request has not procceeded. This occurs if the signatire of the JWT is invalid, or at leats one of the requested scopes is not allowed for the client. |
+|401  |no_such_principal| The princial identified by the prn field of the JWT does not exists on the domain of the issuer. |
+GET /oauth/token
+> Accept: application/json
+< 200
+< Content-Type: application/json
+{
+    "accessToken":"valid-token", 
+    "expiresAt": 1385377605000
+}
+
+
+--
+User
+The following is a section of resources related to users in the SilkRoad platfom
+--
+Get user whose id is given as path parameter
+###Fields###
+|Name|Description|Type|Required|
+|----|-----------|----|:------:|
+|id  |User identifier|String|*|
+|domain|Domain (id) that the user belongs to|String|*|
+|username|Username is an internal identifier of the user between its domain|String|*|
+|email|Email of the user|String|*|
+|firstName|First name|String||
+|lastName|Last name|String||
+|profileUrl|URL of the user profile (ususally this is a profile page on the domain or some social network)||
+|phoneNumber|Telefone number of the user|String||
+|scopes|Scopes which are allowed for this user|Array[String]||
+|properties|Arbitrary properties which are stored by clients on the user object|Map[String, Object]||
+
+###Errors###
+|Status|Error|Description|
+|----|-----------|----|
+|404  |not_found|The user domain isn't the same as the domain authorization|
+|403  |scopes_not_allowed|If at least one of the specified scopes of the user are not allowed on its domain.|
+
+GET /user/{id}
+> Accept: application/json
+< 200
+< Content-Type: application/json
+{
+    "id": "fdad3eaa19ddec84b397a9e9a2312262",
+    "domain": "silkroad",
+    "email": "alexander.deleon@bqreaders.com",
+    "username": "alexander.deleon@bqreaders.com",
+    "firstName": "alex",
+    "scopes": [],
+    "properties" : {}
+}
+
+Same as the */v1.0/user/{id}* endpoint but the user's id is implied from the access_token. If the access_token is not associated with any user a forbidden (403) status is returned. 
+
+###Fields###
+|Name|Description|Type|Required|
+|----|-----------|----|:------:|
+|id  |User identifier|String|*|
+|domain|Domain (id) that the user belongs to|String|*|
+|username|Username is an internal identifier of the user between its domain|String|*|
+|email|Email of the user|String|*|
+|firstName|First name|String||
+|lastName|Last name|String||
+|profileUrl|URL of the user profile (ususally this is a profile page on the domain or some social network)||
+|phoneNumber|Telefone number of the user|String||
+|scopes|Scopes which are allowed for this user|Array[String]||
+|properties|Arbitrary properties which are stored by clients on the user object|Map[String, Object]||
+
+###Errors###
+|Status|Error|Description|
+|----|-----------|----|
+|403  |fobidden|If the access_token is not associated with any user|
+
+GET /user/me
+> Accept: application/json
+< 200
+< Content-Type: application/json
+{
+    "id": "fdad3eaa19ddec84b397a9e9a2312262",
+    "domain": "silkroad",
+    "email": "alexander.deleon@bqreaders.com",
+    "username": "alexander.deleon@bqreaders.com",
+    "firstName": "alex",
+    "scopes": [],
+    "properties" : {}
+}
+
+Add user
 
 ###Parameters###
-|Name|Description|Type|Default|Required
-|----|-----------|----|:-----:|:------:|
-|api:query|A search query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
-|api:pageSize|Number of result returned in the page|Integer > 0|10||
-|api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
-|api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"})|String|||
+The body of the request must contain a JSON representation of the user to be created. Only the following fields are allow on this representation:
+
+|Name|Description|Type|Required|
+|----|-----------|----|:------:|
+|username|Username is an internal identifier of the user between its domain|String|*|
+|email|Email of the user|String|*|
+|firstName|First name|String||
+|lastName|Last name|String||
+|profileUrl|URL of the user profile (ususally this is a profile page on the domain or some social network)||
+|phoneNumber|Telefone number of the user|String||
+|scopes|Scopes which are allowed for this user|Array[String]||
+|properties|Arbitrary properties which are stored by clients on the user object|Map[String, Object]||
 
 ###Errors###
 |Status|Error|Description|
-|------|-----|-----------|
-|400  |invalid_page_size|When api:pageSize parameter is invalid|
-|400  |invalid_sort|When api:sort parameter is invalid|
-|400  |invalid_page|When api:page parameter is invalid|
-|400  |invalid_query|When api:query parameter is invalid|
+|----|-----------|----|
+|422  |invalid_entity|One of the requiered parameters is missing.|
+|409  |entity_exists|When a user already exists with the the specified username and domain |
+|403  |scopes_not_allowed|If at least one of the specified scopes of the user are not allowed on its domain.|
+POST /user
+> Accept: application/json
+> Content-Type: application/json
+{
+  "firstName":"alex",
+  "domain": "silkroad",
+  "email": "alexander.deleon@bqreaders.com",
+  "username": "alexander.deleon@bqreaders.com"
+}
+< 201
+< Location: /user/123
 
-+ Request
-    + Header
-    
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
-        
-### Add new relation [PUT]
-
-Clients can use this endpoint to add a relation. The relative uri of the resource to be added to the relation must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
-
-* **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Adds *music:Track/555* to the *music:tracks* relation of the *music:Playlist/123* resource.
+Update user
 
 ###Parameters###
-|Name|Description|Type|Default|Required
-|----|-----------|----|:-----:|:------:|
-|r|URI matrix param to indicate the relative URI of the resource in the relation's predicate.|URLEncoded string||*|
+The body of the request must contain a JSON representation of the user to be updated. Only the following fields are allow on this representation:
 
+|Name|Description|Type|Required|
+|----|-----------|----|:------:|
+|username|Username is an internal identifier of the user between its domain|String||
+|email|Email of the user|String||
+|firstName|First name|String||
+|lastName|Last name|String||
+|profileUrl|URL of the user profile (ususally this is a profile page on the domain or some social network)||
+|phoneNumber|Telefone number of the user|String||
+|scopes|Scopes which are allowed for this user|Array[String]||
+|properties|Arbitrary properties which are stored by clients on the user object|Map[String, Object]||
 
 ###Errors###
 |Status|Error|Description|
-|------|-----|-----------|
-|400  |bad_request|When data is malformed|
-|409  |conflict|When request id exists in the database|
+|----|-----------|----|
+|404  |not_found|The user domain isn't the same as the domain authorization|
+|403  |scopes_not_allowed|If at least one of the specified scopes of the user are not allowed on its domain.|
+
+PUT /user/{id}
+> Accept: application/json
+> Content-Type: application/json
+{
+  "firstName":"alex",
+  "domain": "silkroad",
+  "email": "alexander.deleon@bqreaders.com",
+  "username": "alexander.deleon@bqreaders.com"
+}
+< 204
 
 
-+ Request
 
-    + Header
-    
-            Accept: application/json
+Delete user
 
-+ Response 201
 
-### Delete a relation [DELETE]
+Request the termination of a user account. This operation is handled asynchronous so the request always returns status 204 (Accepted), even if the user does not exists.
 
-Clients can use this endpoint to delete a relation. The relative uri of the resource to be added to the relation must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
+###Errors###
+|Status|Error|Description|
+|----|-----------|----|
+|404  |not_found|User id not found in IAM|
 
-* **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Deletes *music:Track/555* from the *music:tracks* relation of the *music:Playlist/123* resource.
+DELETE /user/{id}
+> Accept: application/json
+< 204
+
+Add identity.
+Add a new social identity to an existing user
 
 ###Parameters###
-|Name|Description|Type|Default|Required
-|----|-----------|----|:-----:|:------:|
-|r|URI matrix param to indicate the relative URI of the resource in the relation's predicate.|URLEncoded string||*|
+Json body.
 
+|Name|Description|Type|Required|
+|----|-----------|----|:------:|
+|oauthService|OAuth service represented by his name (eg. "facebook", "twitter", "silkroad")|string|*|
+|oauthId|User's Id in the OAuth server|string|*|
 
 ###Errors###
 |Status|Error|Description|
-|------|-----|-----------|
-|400  |bad_request|When data is malformed|
+|----|-----------|----|
+|400|bad_request|Json expected malformed|
+|400|invalid_oauth_service|If the specified oauth service is invalid or not allowed in the domain.|
+|404|not_found|User id not found in IAM|
+|409|identity_exists|The identity already exists| 
 
-
-+ Response 204
-
+POST /user/{id}/identity
+> Accept: application/json
+> Content-type: application/json
+{
+    "oAuthService":"silkroad",
+    "oAuthId":"12435"
+}
+< 201
