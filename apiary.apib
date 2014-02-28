@@ -80,12 +80,16 @@ Clients can use this endpoint to add a new resource. The body of the request mus
 
 
 
-## Resources [/v1.0/resource/{type}/{id}]
+## Resources [/v1.0/resource/{collectionName}/{test:TestApiaryObjectIDParameter}]
 
 A resource is single object in a collection. For instance
 
 * **/resource/music:Album/123**    => The representation of a single object of type *music:Album* whose identifier is *123*
 
++ Parameters
+    + collectionName (required, string, `test:TestApiaryObject`) ...
+    + test:TestApiaryObjectIDParameter (required, string, `123`) ... Object ID
+    
 ### Get a resource representation [GET]
 
 For the *JSON* represeantion the response is an object.
@@ -147,7 +151,7 @@ Clients can use this endpoint to delete a resource.
 
 + Response 204
 
-## Relations [/v1.0/resource/{type}/{id}/{rel}]
+## Relations [/v1.0/resource/{collectionName}/{id}/{rel}]
 
 ### List elements of a resource's relation [GET]
 
