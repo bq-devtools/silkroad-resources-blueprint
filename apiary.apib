@@ -8,12 +8,14 @@ The Resources API is a flexible programming interface for retrieval of resource'
 For some resources there may be multiple representations which the client can retrieve.  Aligned with HTTP standards, a client can request the desire representation by using Accept header in its request. In cases when the client does not request a specific representation via the  Accept header, the server will always default to a representation in the application/json format. When multiple representations exits, the server sends the Alternates header to indicate available representations.
 
 
-## Collections [/v1.0/resource/{type}]
+## Collections [/v1.0/resource/{collectionName}]
 A collection is a container of resources that share the same type. For instance:
 
 * **/resource/music:Album**    => All resources of type *music:Album*
 * **/resource/book:Book**     => All resources of type *book:Book*
 * **/resource/music:Artist**   => All resources of type *music:Artist*
++ Parameters
+    + collectionName (required, string, `test:TestObject`) ...
 
 ### List elements of a collection [GET]
 
