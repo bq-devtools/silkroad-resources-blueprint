@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://resources.int.bqws.io/v1.0/
+HOST: https://resources.int.bqws.io
 
 # Resources (v1.0)
 The Resources API is a flexible programming interface for retrieval of resource's representations. This is the generic API specification for the **resources-api**. More information can be found in [confluence](http://jira.mundoreader.com/confluence/display/SILKROAD/SilkRoad+-+Resources+API).
@@ -8,7 +8,7 @@ The Resources API is a flexible programming interface for retrieval of resource'
 For some resources there may be multiple representations which the client can retrieve.  Aligned with HTTP standards, a client can request the desire representation by using Accept header in its request. In cases when the client does not request a specific representation via the  Accept header, the server will always default to a representation in the application/json format. When multiple representations exits, the server sends the Alternates header to indicate available representations.
 
 
-## Collections [/resource/{type}]
+## Collections [/v1.0/resource/{type}]
 A collection is a container of resources that share the same type. For instance:
 
 * **/resource/music:Album**    => All resources of type *music:Album*
@@ -77,7 +77,7 @@ Clients can use this endpoint to add a new resource. The body of the request mus
 
 
 
-## Resources [/resource/{type}/{id}]
+## Resources [/v1.0/resource/{type}/{id}]
 
 A resource is single object in a collection. For instance
 
@@ -144,7 +144,7 @@ Clients can use this endpoint to delete a resource.
 
 + Response 204
 
-## Relations [/resource/{type}/{id}/{rel}]
+## Relations [/v1.0/resource/{type}/{id}/{rel}]
 
 ### List elements of a resource's relation [GET]
 
