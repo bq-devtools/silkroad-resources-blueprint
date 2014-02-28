@@ -15,7 +15,7 @@ A collection is a container of resources that share the same type. For instance:
 * **/resource/book:Book**     => All resources of type *book:Book*
 * **/resource/music:Artist**   => All resources of type *music:Artist*
 + Parameters
-    + collectionName (required, string, `test:TestObject`) ...
+    + collectionName (required, string, `test:TestApiaryObject`) ...
 
 ### List elements of a collection [GET]
 
@@ -44,7 +44,12 @@ For the *JSON* representation the response is an array of objects.
             Authorization : Bearer {token}   
             Accept: application/json
 
-+ Response 200 
++ Response 200 (application/json)
+
+        [{ 
+                "field1": "field1content",
+                "field2": "field2content"
+            }]
 
 ### Add new resource into collection [POST]
 
