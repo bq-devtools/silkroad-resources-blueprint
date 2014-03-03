@@ -17,6 +17,33 @@ A collection is a container of resources that share the same type. For instance:
 + Parameters
     + collectionName (required, string, `test:TestApiaryObject`) ...
 
+### Add new resource into collection [POST]
+
+Clients can use this endpoint to add a new resource. The body of the request must contain a *JSON* representation of the collection resource to be created. 
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400  |bad_request|When request is malformed|
+|409  |conflict|When request id exists in the database|
+|422  |invalid_entity|When entity is malformed|
+
++ Request
+
+    + Headers
+
+            Authorization : Bearer {token}   
+            Accept: application/json
+            
+    + Body
+    
+            { 
+                "field1": "field1content",
+                "field2": "field2content"
+            }
+
++ Response 201
+
 ### List elements of a collection [GET]
 
 For the *JSON* representation the response is an array of objects.
@@ -51,32 +78,7 @@ For the *JSON* representation the response is an array of objects.
                 "field2": "field2content"
             }]
 
-### Add new resource into collection [POST]
 
-Clients can use this endpoint to add a new resource. The body of the request must contain a *JSON* representation of the collection resource to be created. 
-
-###Errors###
-|Status|Error|Description|
-|------|-----|-----------|
-|400  |bad_request|When request is malformed|
-|409  |conflict|When request id exists in the database|
-|422  |invalid_entity|When entity is malformed|
-
-+ Request
-
-    + Headers
-
-            Authorization : Bearer {token}   
-            Accept: application/json
-            
-    + Body
-    
-            { 
-                "field1": "field1content",
-                "field2": "field2content"
-            }
-
-+ Response 201
 
 
 
