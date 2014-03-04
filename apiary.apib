@@ -147,16 +147,13 @@ The body of the request must contain a Json object including the fields to updat
 
 Clients can use this endpoint to delete a resource.
 
-+ Request (application/json)
++ Request
     + Headers
     
-            Authorization: Bearer {token}   
+            Authorization: Bearer {token} 
+            Accept: application/json
 
-    + Body
-    
-            {}    
-        
-+ Response 204 (application/json)
++ Response 204
 
 ## Relations [/v1.0/resource/{collectionName}/{id}/{rel}]
 
