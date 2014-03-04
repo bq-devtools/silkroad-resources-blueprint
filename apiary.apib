@@ -98,8 +98,9 @@ For the *JSON* represeantion the response is an object.
 |404  |not_found|When resource is not exist|
 
 + Request
-    + Header
+    + Headers
     
+            Authorization : Bearer {token}   
             Accept: application/json
 
 + Response 200 (application/json)
@@ -183,11 +184,12 @@ For the *JSON* representation the response is an array of objects.
 
 + Response 200 (application/json)
 
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
+        {
+            "type":"object",
+            "$schema": "http://json-schema.org/draft-03/schema"
+        } 
+
+
         
 ### Add new relation [PUT]
 
