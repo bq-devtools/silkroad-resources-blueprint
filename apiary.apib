@@ -211,6 +211,7 @@ Clients can use this endpoint to add a relation. The relative uri of the resourc
 |----|-----------|----|:-----:|:------:|
 |r|URI matrix param to indicate the relative URI of the resource in the relation's predicate.|URLEncoded string||*|
 
+The request body can contain a JSON object with data about the new relation.
 
 ###Errors###
 |Status|Error|Description|
@@ -226,7 +227,13 @@ Clients can use this endpoint to add a relation. The relative uri of the resourc
             Authorization: Bearer {token} 
             Accept: application/json
             Content-Length: 0
-
+    
+    + Body
+        
+            {
+                "field1":"test"
+            }
+    
 + Response 201
 
 ### Delete a relation [DELETE]
