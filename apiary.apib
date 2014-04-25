@@ -21,6 +21,10 @@ A collection is a container of resources that share the same type. For instance:
 
 Clients can use this endpoint to add a new resource. The body of the request must contain a *JSON* representation of the collection resource to be created. 
 
+###Version###
+
+Avaliable from version 0.12.0 or higher
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
@@ -51,6 +55,10 @@ Clients can use this endpoint to add a new resource. The body of the request mus
 ### List elements of a collection [GET]
 
 For the *JSON* representation the response is an array of objects.
+
+###Version###
+
+Avaliable from version 0.12.0 or higher
 
 ###Parameters###
 |Name|Description|Type|Default|Required
@@ -90,9 +98,14 @@ For the *JSON* representation the response is an array of objects.
 
 A resource is single object in a collection. For instance
 
+
 * **/resource/music:Album/123**    => The representation of a single object of type *music:Album* whose identifier is *123*
 
 ### Get a resource representation [GET]
+
+###Version###
+
+Avaliable from version 0.12.0 or higher
 
 For the *JSON* represeantion the response is an object.
 
@@ -117,6 +130,10 @@ For the *JSON* represeantion the response is an object.
 ### Update a resource [PUT]
 
 Clients can use this endpoint to update a resource.
+
+###Version###
+
+Avaliable from version 0.12.0 or higher
 
 ###Parameters###
 The body of the request must contain a Json object including the fields to update in a particular resource.
@@ -151,6 +168,10 @@ The body of the request must contain a Json object including the fields to updat
 
 Clients can use this endpoint to delete a resource.
 
+###Version###
+
+Avaliable from version 0.12.0 or higher
+
 + Request
 
     + Headers
@@ -167,6 +188,10 @@ Clients can use this endpoint to delete a resource.
 ### List elements of a resource's relation [GET]
 
 For the *JSON* representation the response is an array of objects.
+
+###Version###
+
+Avaliable from version 0.12.0 or higher
 
 ###Parameters###
 |Name|Description|Type|Default|Required
@@ -204,6 +229,10 @@ Clients can use this endpoint to add a relation. The relative uri of the resourc
 
 * **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Adds *music:Track/555* to the *music:tracks* relation of the *music:Playlist/123* resource.
 
+###Version###
+
+Avaliable from version 0.12.0 or higher
+
 ###Parameters###
 |Name|Description|Type|Default|Required
 |----|-----------|----|:-----:|:------:|
@@ -239,6 +268,10 @@ The request body can contain a JSON object with data about the new relation.
 Clients can use this endpoint to delete a relation. The relative uri of the resource to be added to the relation must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
 
 * **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Deletes *music:Track/555* from the *music:tracks* relation of the *music:Playlist/123* resource.
+
+###Version###
+
+Avaliable from version 0.12.0 or higher
 
 ###Parameters###
 |Name|Description|Type|Default|Required
