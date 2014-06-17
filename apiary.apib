@@ -265,9 +265,10 @@ The request body can contain a JSON object with data about the new relation.
 
 ### Delete a relation [DELETE]
 
-Clients can use this endpoint to delete a relation. The relative uri of the resource to be added to the relation must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
+Clients can use this endpoint to delete relations. If clieant want delete only one relation, it must add relative uri of the resource must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
 
 * **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Deletes *music:Track/555* from the *music:tracks* relation of the *music:Playlist/123* resource.
+* **/resource/music:Playlist/123/music:tracks**    => Deletes *music:Playlist/123* entries of *music:tracks* relation.
 
 ###Version###
 
@@ -276,7 +277,7 @@ Avaliable from version 0.12.0
 ###Parameters###
 |Name|Description|Type|Default|Required
 |----|-----------|----|:-----:|:------:|
-|r|URI matrix param to indicate the relative URI of the resource in the relation's predicate.|URLEncoded string||*|
+|r|URI matrix param to indicate the relative URI of the resource in the relation's predicate.|URLEncoded string|||
 
 
 ###Errors###
