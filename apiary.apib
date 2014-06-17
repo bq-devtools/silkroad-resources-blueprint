@@ -265,10 +265,10 @@ The request body can contain a JSON object with data about the new relation.
 
 ### Delete a relation [DELETE]
 
-Clients can use this endpoint to delete relations. If clieant want delete only one relation, it must add relative uri of the resource must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
+Clients can use this endpoint to delete relations. If clieant want delete only one relation, it must add relative URI matrix of linked resource. For instance:
 
 * **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Deletes *music:Track/555* from the *music:tracks* relation of the *music:Playlist/123* resource.
-* **/resource/music:Playlist/123/music:tracks**    => Deletes *music:Playlist/123* entries of *music:tracks* relation.
+* **/resource/music:Playlist/123/music:tracks**    => Deletes all *music:Playlist/123* entries from relation.
 
 ###Version###
 
