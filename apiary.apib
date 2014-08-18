@@ -104,7 +104,7 @@ A resource is single object in a collection. For instance
 
 ### Get a resource representation [GET]
 
-For the *JSON* represeantion the response is an object.
+For the *JSON* representation the response is an object. Also, you can get byte representation using *octet-stream* media type.
 
 ###Version###
 
@@ -137,15 +137,22 @@ Clients can use this endpoint to update a resource.
 Avaliable from version 0.12.0
 
 ###Parameters###
-The body of the request must contain a Json object including the fields to update in a particular resource.
+If you use *application/json* media type, the body of the request must contain a Json object including the fields to update in a particular resource.
 
 |Name|Description|Type|Required
 |----|-----------|----|:------:|
 |element|A part of collection element or full collection element|JSON|*|
 
+Also, you can use *octet-stream* media type to upload any file in the server.
+
+|Name|Description|Type|Required
+|----|-----------|----|:------:|
+|element|A element file representation|File|*|
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
+|400  |bad_request|Body entity not present|
 |404  |not_found|When resource is not exist|
 |422  |invalid_entity|When entity is malformed|
 
@@ -167,7 +174,9 @@ The body of the request must contain a Json object including the fields to updat
 
 ### Delete a resource [DELETE]
 
-Clients can use this endpoint to delete a resource.
+Clients can use this endpoint to delete a resource. Clients can specify the
+media type *application/json* to delete resources json representation
+or *octet-stream* to delete stream representation.
 
 ###Version###
 
