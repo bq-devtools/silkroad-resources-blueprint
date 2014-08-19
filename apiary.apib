@@ -21,9 +21,6 @@ A collection is a container of resources that share the same type. For instance:
 
 Clients can use this endpoint to add a new resource. The body of the request must contain a *JSON* representation of the collection resource to be created. 
 
-###Version###
-
-Avaliable from version 0.12.0
 
 ###Errors###
 |Status|Error|Description|
@@ -106,9 +103,6 @@ A resource is single object in a collection. For instance
 
 For the *JSON* representation the response is an object. Also, you can get byte representation using *octet-stream* media type.
 
-###Version###
-
-Avaliable from version 0.12.0
 
 ###Errors###
 |Status|Error|Description|
@@ -132,9 +126,7 @@ Avaliable from version 0.12.0
 
 Clients can use this endpoint to update a resource.
 
-###Version###
 
-Avaliable from version 0.12.0
 
 ###Parameters###
 If you use *application/json* media type, the body of the request must contain a Json object including the fields to update in a particular resource.
@@ -178,9 +170,7 @@ Clients can use this endpoint to delete a resource. Clients can specify the
 media type *application/json* to delete resources json representation
 or *octet-stream* to delete stream representation.
 
-###Version###
 
-Avaliable from version 0.12.0
 
 + Request
 
@@ -199,9 +189,6 @@ Avaliable from version 0.12.0
 
 For the *JSON* representation the response is an array of objects.
 
-###Version###
-
-Avaliable from version 0.12.0
 
 ###Parameters###
 |Name|Description|Type|Default|Required
@@ -240,9 +227,7 @@ Clients can use this endpoint to add a relation. The relative uri of the resourc
 
 * **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Adds *music:Track/555* to the *music:tracks* relation of the *music:Playlist/123* resource.
 
-###Version###
 
-Avaliable from version 0.12.0
 
 ###Parameters###
 |Name|Description|Type|Default|Required
@@ -281,9 +266,6 @@ Clients can use this endpoint to delete relations. If clieant want delete only o
 * **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Deletes *music:Track/555* from the *music:tracks* relation of the *music:Playlist/123* resource.
 * **/resource/music:Playlist/123/music:tracks**    => Deletes all *music:Playlist/123* entries from relation.
 
-###Version###
-
-Avaliable from version 0.12.0
 
 ###Parameters###
 |Name|Description|Type|Default|Required
