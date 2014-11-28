@@ -279,6 +279,45 @@ The request body can contain a JSON object with data about the new relation.
     
 + Response 201
 
+### Move a relation [PUT]
+
+Clients can use this endpoint to move a relation. The relative uri of the resource to be added to the relation must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
+
+* **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Adds *music:Track/555* to the *music:tracks* relation of the *music:Playlist/123* resource.
+
+###Version###
+
+Avaliable from version 1.9
+
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|order|position to move the relation.|double||*|
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400  |bad_request|When data is malformed|
+
+
+
++ Request (application/json)
+
+    + Header
+    
+            Authorization: Bearer {token} 
+            Accept: application/json
+            Content-Length: 0
+    
+    + Body
+        
+            {
+                _order : $pos(1)
+            }
+    
++ Response 201
+
 ### Delete a relation [DELETE]
 
 Clients can use this endpoint to delete relations. If clieant want delete only one relation, it must add relative URI matrix of linked resource. For instance:
