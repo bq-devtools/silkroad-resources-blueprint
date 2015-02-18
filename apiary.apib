@@ -283,7 +283,10 @@ The request body can contain a JSON object with data about the new relation.
 
 Clients can use this endpoint to move a relation. The relative uri of the resource to be added to the relation must be passed as a [URI matrix](http://www.w3.org/DesignIssues/MatrixURIs.html) param. For instance:
 
+
 * **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Adds *music:Track/555* to the *music:tracks* relation of the *music:Playlist/123* resource.
+
+The body of the request must contain a *JSON* with the required parameters.
 
 ###Version###
 
@@ -293,7 +296,7 @@ Avaliable from version 1.9
 ###Parameters###
 |Name|Description|Type|Default|Required
 |----|-----------|----|:-----:|:------:|
-|order|position to move the relation. pos=0 is excluded|double||*|
+|_order|position to move the relation. pos=0 is excluded. Format: '$pos(value)'|integer||*|
 
 ###Errors###
 |Status|Error|Description|
@@ -316,7 +319,7 @@ Avaliable from version 1.9
                 _order : $pos(1)
             }
     
-+ Response 201
++ Response 204
 
 ### Delete a relation [DELETE]
 
