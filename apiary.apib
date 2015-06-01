@@ -142,6 +142,12 @@ Clients can use this endpoint to update a resource.
 
 
 ###Parameters###
+
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|api:condition|An update condition expressed in corbel query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
+
+
 If you use *application/json* media type, the body of the request must contain a Json object including the fields to update in a particular resource.
 
 |Name|Description|Type|Required
