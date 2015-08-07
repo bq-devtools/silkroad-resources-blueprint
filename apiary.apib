@@ -21,6 +21,14 @@ A collection is a container of resources that share the same type. For instance:
 
 Clients can use this endpoint to add a new resource. The body of the request must contain a *JSON* representation of the collection resource to be created. 
 
+Json attributes can not start with underscore.
+
+underscoreObject = {
+                    '_field1': 'asdf'
+                   };
+
+
+
 ###Version###
 
 Avaliable from version 0.12.0
