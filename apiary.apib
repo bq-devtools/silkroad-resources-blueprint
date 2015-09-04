@@ -59,6 +59,53 @@ Avaliable from version 0.12.0
     
             location: http://resources.int.io/v1.0/resources/test:ApiaryObject/123
 
+### Update the resources of a collection [PUT]
+
+Clients can use this endpoint to update a collection. The body of the request must contain a *JSON* representation of the collection resource to be updated. 
+
+Json attributes can not start with underscore.
+
+underscoreObject = {
+                    '_field1': 'asdf'
+                   };
+
+
+
+###Version###
+
+Avaliable from version 1.23.0
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|api:condition|A condition query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|412  |precondition_failed|When api:condition parameter is invalid|
+|422  |invalid_entity|When entity is malformed|
+
++ Request
+
+    + Headers
+
+            Authorization : Bearer {token}   
+            Accept: application/json
+            
+    + Body
+    
+            { 
+                "field1": "field1content",
+                "field2": "field2content"
+            }
+
++ Response 201
+
+    + Headers
+    
+            location: http://resources.int.io/v1.0/resources/test:ApiaryObject/123
+
         
 ### List elements of a collection [GET]
 
