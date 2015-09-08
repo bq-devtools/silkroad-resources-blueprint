@@ -124,6 +124,8 @@ Avaliable from version 0.12.0
 |api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
 |api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"}).|String|||
 |api:aggregation|An aggregation operation expressed in silkroad aggregation language (documentaton [here](https://confluence.bq.com/display/SILKROAD/Aggregation+language)).|String|||
+|api:distinct|List of fields, comma separated. Returned results never repeat those fields, respecting requested order.|String|||
+
 
 ###Errors###
 |Status|Error|Description|
@@ -255,7 +257,6 @@ Avaliable from version 0.12.0
             Authorization: Bearer {token} 
             Accept: application/json
             Content-Type: application/json
-            Content-Length: 0
 
 + Response 204
 
@@ -277,6 +278,7 @@ Avaliable from version 0.12.0
 |api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
 |api:sort|Results orders. JSON with field to order and direction, asc or desc.  (e.g. {"name":"asc"}). To get the list sorted by order use { "_order": "asc" }|String|||
 |api:aggregation|An aggregation operation expressed in silkroad aggregation language (documentaton [here](https://confluence.bq.com/display/SILKROAD/Aggregation+language)).|String|||
+|api:distinct|List of fields, comma separated. Returned results never repeat those fields, respecting requested order.|String|||
 
 ###Errors###
 |Status|Error|Description|
@@ -414,7 +416,6 @@ Avaliable from version 0.12.0
             Authorization: Bearer {token} 
             Accept: application/json
             Content-Type: application/json
-            Content-Length: 0
 
 + Response 204
 
