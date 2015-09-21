@@ -323,8 +323,7 @@ The request body can contain a JSON object with data about the new relation.
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
-|400  |bad_request|When data is malformed|
-|409  |conflict|When request id exists in the database|
+|422  |invalid_entity|When entity is malformed|
 
 
 + Request (application/json)
