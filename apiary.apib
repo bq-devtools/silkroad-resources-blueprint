@@ -391,8 +391,8 @@ Clients can use this endpoint to delete relations. If clieant want delete only o
 * **/resource/music:Playlist/123/music:tracks;r=music:Track/555**    => Deletes *music:Track/555* from the *music:tracks* relation of the *music:Playlist/123* resource.
 * **/resource/music:Playlist/123/music:tracks**    => Deletes all *music:Playlist/123* entries from relation.
 
-If clieant want delete by query, it must add query params. For instance:
-* **/resource/music:Playlist/123/music:tracks?api:query={"$eq":{"field": 123}}**    => Deletes resources that satisfied field == 123 from the *music:tracks* relation of the *music:Playlist/123* resource.
+If a client wants to delete a relation filtering results using a query, query params must be added to the deletion request. For instance:
+* **/resource/music:Playlist/123/music:tracks?api:query={"$eq":{"field": 123}}**    => Deletes resources that satisfy field == 123 from the *music:tracks* relation of the *music:Playlist/123* resource.
 
 ###Version###
 
