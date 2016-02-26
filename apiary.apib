@@ -83,7 +83,7 @@ Avaliable from version 1.23.0
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
-|412  |precondition_failed|When api:condition parameter is invalid|
+|400  |bad_request|When api:condition parameter is malformed|
 |422  |invalid_entity|When entity is malformed|
 
 + Request
@@ -223,6 +223,7 @@ Also, you can use *octet-stream* and *xml* media type to upload any file in the 
 |400  |bad_request|Body entity not present|
 |404  |not_found|When resource is not exist|
 |422  |invalid_entity|When entity is malformed|
+|412  |precondition_failed|When the condition was not fulfilled|
 
 + Request
     + Header
@@ -421,4 +422,3 @@ Avaliable from version 0.12.0
             Content-Type: application/json
 
 + Response 204
-
